@@ -1,62 +1,45 @@
-import random
+
+# 0/1 Knapsack using Dynamic Programming
+
+def knapsack(capacity, weight, profit, n):
+
+    # Create DP table
+    dp = [[0 for j in range(capacity + 1)]
+          for i in range(n + 1)]
+
+    # Fill DP table
+    for i in range(1, n + 1):
+
+        for w in range(1, capacity + 1):
+
+            if weight[i - 1] <= w:
+
+                dp[i][w] = max(
+                    profit[i - 1] + dp[i - 1][w - weight[i - 1]],
+                    dp[i - 1][w]
+                )
+
+            else:
+                dp[i][w] = dp[i - 1][w]
+
+    return dp[n][capacity]
 
 
-class QuickSort:
-    def __init__(self,array):
-        self.array = array
-    
+# Main Program
+n = int(input("Enter number of items: "))
 
-    # Deterministic method to find pivot
-    def partition(self,low,high):
-        # High element is default pivot
-        pivot = self.array[high]
+weight = []
+profit = []
 
-        # pointer for greater element
-        i = low - 1
+for i in range(n):
+    w = int(input("Enter weight: "))
+    p = int(input("Enter profit: "))
 
+    weight.append(w)
+    profit.append(p)
 
-        for j in range(low,high):
-            if self.array[j] <= pivot:
-                # if element smaller than pivot is found
-                # swap it with the greater element pointed by i
-                i += 1
-                self.array[i],self.array[j] = self.array[j],self.array[i]
-        # swap the pivot element with the greater element specified by i
-        self.array[i+1],self.array[high] = self.array[high],self.array[i+1]
+capacity = int(input("Enter knapsack capacity: "))
 
-        return i+1
-    
-    def partition_random(self,low,high):
-        pivot = random.randint(low,high)
-        self.array[pivot],self.array[high] = self.array[high],self.array[pivot]
-        return self.partition(low,high)
-    
-    # deterministic variant of sort
-    def sort_d(self,low,high):
-        if low < high:
+result = knapsack(capacity, weight, profit, n)
 
-            pivot = self.partition(low,high)
-            self.sort_d(low,pivot-1)
-            self.sort_d(pivot+1,high)
-    
-    
-    # random variant of sort
-    def sort_r(self,low,high):
-        if low < high:
-            pivot = self.partition_random(low,high)
-            self.sort_r(low,pivot-1)
-            self.sort_r(pivot+1,high)
-
-
-while True:
-    print("Press Ctrl+C to exit...")
-    array = [int(i) for i in input("Enter array").split(" ")]
-    print("Deterministic variant of sort")
-    sort1 = QuickSort(array)
-    sort1.sort_d(0,len(array)-1)
-    print(sort1.array)
-    print("Radomized variant of sort")
-    sort2 = QuickSort(array)
-    sort2.sort_r(0,len(array)-1)
-    print(sort2.array)
-    
+print("Maximum Profit:", result)
