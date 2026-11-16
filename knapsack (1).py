@@ -1,20 +1,55 @@
-def knapsack(values,weights,capacity):
-    dp = [[0 for i in range(capacity+1)] for j in range(len(values)+1)]
 
-    for item in range(1,len(values) + 1):
-        for weight in range(1,capacity + 1):
-            if weights[item - 1] <= weight:
-                dp[item][weight] = max(dp[item-1][weight-weights[item-1]]+values[item-1],dp[item-1][weight])
-            else:
-                dp[item][weight] = dp[item-1][weight]
-    return dp[-1][-1]
+# Fractional Knapsack using Greedy Method
+
+def fractional_knapsack(profit, weight, capacity):
+
+    n = len(profit)
+
+    # Calculate profit/weight ratio
+    ratio = []
+
+    for i in range(n):
+        ratio.append(profit[i] / weight[i])
+
+    # Sort items according to ratio in descending order
+    for i in range(n):
+        for j in range(i + 1, n):
+            if ratio[i] < ratio[j]:
+                ratio[i], ratio[j] = ratio[j], ratio[i]
+                profit[i], profit[j] = profit[j], profit[i]
+                weight[i], weight[j] = weight[j], weight[i]
+
+    total_profit = 0
+
+    # Select items
+    for i in range(n):
+
+        if weight[i] <= capacity:
+            total_profit += profit[i]
+            capacity -= weight[i]
+
+        else:
+            total_profit += ratio[i] * capacity
+            break
+
+    return total_profit
 
 
-while True:
-    print("Press Ctrl+C to terminate...")
-    n = int(input('Enter number of items: '))
-    values = [int(i) for i in input("Enter values of items:").split(" ")]
-    weights = [int(i) for i in input("Enter weights of items:").split(" ")]
-    capacity = int(input("Enter maximum weight: "))
-    maximum_value = knapsack(values,weights,capacity)
-    print('The maximum value of items that can be carried:', maximum_value)
+# Main Program
+n = int(input("Enter number of items: "))
+
+profit = []
+weight = []
+
+for i in range(n):
+    p = float(input("Enter profit: "))
+    w = float(input("Enter weight: "))
+
+    profit.append(p)
+    weight.append(w)
+
+capacity = float(input("Enter knapsack capacity: "))
+
+result = fractional_knapsack(profit, weight, capacity)
+
+print("Maximum Profit:", result)
