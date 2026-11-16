@@ -1,37 +1,31 @@
-def fibonacci_iterative(n:int):
-    if n == 1:
+def fibonacci_iterative(n):
+    a = 0
+    b = 1
+
+    for i in range(n):
+        print(a, end=" ")
+        c = a + b
+        a = b
+        b = c
+
+
+# Recursive Function
+def fibonacci_recursive(n):
+
+    if n == 0:
         return 0
-    elif n == 2:
+
+    elif n == 1:
         return 1
+
     else:
-        dp = [0] * n
-        dp[0] = 0
-        dp[1] = 1
+        return fibonacci_recursive(n - 1) + fibonacci_recursive(n - 2)
 
-        for i in range(2,n):
-            dp[i] = dp[i-1] + dp[i-2]
+n = int(input("Enter the number of terms: "))
 
-        return dp[n-1]
+print("\nNon-Recursive Fibonacci Series:")
+fibonacci_iterative(n)
 
-
-def fibonacci_recursive(n:int):
-    cache = {
-        1:0,
-        2:1
-    }
-    return helper(n,cache)
-
-
-def helper(n:int,cache):
-    if n in cache:
-        return cache[n]
-
-    cache[n] = helper(n-1,cache) + helper(n-2,cache)
-
-    return cache[n]
-
-
-n = int(input("Enter value of n(nth Fibonacci number): "))
-
-print(f"Fibonacci Number(Iterative): {fibonacci_iterative(n)}")
-print(f"Fibonacci Number(Recursive): {fibonacci_recursive(n)}")
+print("\nRecursive Fibonacci Series:")
+for i in range(n):
+    print(fibonacci_recursive(i), end=" ")
